@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  Required:
+    name: Required
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install asset validators
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends --yes \
+            fontconfig \
+            ghostscript \
+            imagemagick \
+            librsvg2-bin \
+            libxml2-utils \
+            poppler-utils \
+            yamllint
+
+      - name: Decode and validate every tracked asset
+        run: scripts/validate-assets.sh
